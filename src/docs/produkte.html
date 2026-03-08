@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jochen Hornung — Was ich gebaut habe</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #D4A017;
+    --bg: #0c0c0c;
+    --surface: #161616;
+    --border: #252525;
+    --text: #ccc;
+    --muted: #555;
+    --white: #f0f0f0;
+    --green: #4ade80;
+  }
+
+  body {
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 64px 48px;
+  }
+
+  header {
+    margin-bottom: 56px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .intro {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  .intro span { color: var(--gold); }
+
+  /* SECTION */
+  .section-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 48px;
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.2s, transform 0.2s;
+    text-decoration: none;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card.clickable {
+    cursor: pointer;
+  }
+
+  .card.clickable:hover {
+    border-color: rgba(212,160,23,0.4);
+    transform: translateY(-2px);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .card-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .badge-live {
+    background: rgba(74,222,128,0.1);
+    color: var(--green);
+    border: 1px solid rgba(74,222,128,0.2);
+  }
+
+  .badge-wip {
+    background: rgba(212,160,23,0.1);
+    color: var(--gold);
+    border: 1px solid rgba(212,160,23,0.2);
+  }
+
+  .badge-lokal {
+    background: rgba(150,150,150,0.1);
+    color: var(--muted);
+    border: 1px solid rgba(150,150,150,0.15);
+  }
+
+  .card-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .card-type {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .card-url {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .card-url::before {
+    content: '↗';
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  .card.clickable:hover .card-url {
+    color: var(--gold);
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .footer-brand {
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    font-size: 12px;
+  }
+
+  /* STAT ROW */
+  .stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">J-THRUST · Jochen Hornung · Berlin</div>
+  <h1>Was ich gebaut habe.</h1>
+  <p class="intro">Alles alleine. In den letzten <span>50 Tagen</span>. Ohne Team, ohne Kapital, ohne Investor.</p>
+
+  <div class="stats">
+    <div class="stat"><span class="stat-num">9</span><span class="stat-label">Live-Projekte</span></div>
+    <div class="stat"><span class="stat-num">1</span><span class="stat-label">Spiel (lokal)</span></div>
+    <div class="stat"><span class="stat-num">3</span><span class="stat-label">In Entwicklung</span></div>
+    <div class="stat"><span class="stat-num">0€</span><span class="stat-label">laufende Hosting-Kosten</span></div>
+  </div>
+</header>
+
+<!-- LIVE PRODUKTE -->
+<div class="section-label">Digitale Werkzeuge — live</div>
+<div class="grid">
+
+  <a class="card clickable" href="https://spuera.app" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">🌡️</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">PWA · Mental Health</div>
+    <div class="card-name">Spüra</div>
+    <div class="card-desc">Emotionales Selbst-Tracking in 5 Dimensionen. Alle Daten lokal, kein Server, 3 Sprachen (DE/EN/PT). Für Menschen auf der Warteliste zum Therapieplatz.</div>
+    <div class="card-url">spuera.app</div>
+  </a>
+
+  <a class="card clickable" href="https://pruefstein.netlify.app" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">⚖️</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">KI-Tool · Ethik</div>
+    <div class="card-name">Prüfstein</div>
+    <div class="card-desc">URL eingeben → KI bewertet: schöpft dieser Inhalt oder schöpft er ab? 10 Achsen, Quadranten-Einordnung. Gebaut mit Gemini 2.5 Flash + Google Search Grounding.</div>
+    <div class="card-url">pruefstein.netlify.app</div>
+  </a>
+
+  <a class="card clickable" href="https://jsphere.jochenhornung.de" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">🔮</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">WebGL · Meditation</div>
+    <div class="card-name">J-Sphere / M-Sphere</div>
+    <div class="card-desc">Philosophische Meditations-App. Eine Schneekugel mit 3.500 Partikeln, einem goldenen Mönch und 6 Gedankenmodi. Läuft auch auf Vision Pro. iOS-App in Entwicklung.</div>
+    <div class="card-url">jsphere.jochenhornung.de</div>
+  </a>
+
+  <a class="card clickable" href="https://die-letzte-utopie.netlify.app" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">📖</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">Website · Buch · Podcast</div>
+    <div class="card-name">Die letzte & erste Utopie</div>
+    <div class="card-desc">Website zum Cappuchino-Projekt: Gesellschaftspolitisches Sachbuch (13 Kapitel, online lesbar), Podcast-Konzept mit Pauline, Content-Kompass als KI-Tool.</div>
+    <div class="card-url">die-letzte-utopie.netlify.app</div>
+  </a>
+
+  <a class="card clickable" href="https://jochenhornung.de" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">✍️</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">Portfolio · Texte · Coaching</div>
+    <div class="card-name">jochenhornung.de</div>
+    <div class="card-desc">Meine Website. Gedichte, Essays, Coaching-Angebot, digitale Werkzeuge. Gebaut mit Klarsite — meinem eigenen Framework.</div>
+    <div class="card-url">jochenhornung.de</div>
+  </a>
+
+  <a class="card clickable" href="https://zoe-barossi.statichost.page" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">🏊</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">Kunden-Website</div>
+    <div class="card-name">Zoe Barossi</div>
+    <div class="card-desc">Website für Zoe Barossi — Triathletin, Psychodrama-Therapeutin. Gebaut mit Klarsite in unter zwei Wochen. Erster Beweis des Konzepts. EU-Hosting + perfectCMS.</div>
+    <div class="card-url">zoe-barossi.statichost.page</div>
+  </a>
+
+  <a class="card clickable" href="https://yumi-choi.statichost.page" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">☕</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">Kunden-Website</div>
+    <div class="card-name">Yumi Choi</div>
+    <div class="card-desc">Website für Yumi Choi — Co-Founderin Bonanza Coffee, AVGS-Coach. Gebaut mit Klarsite. Mehrsprachig (DE/EN), EU-Hosting, perfectCMS.</div>
+    <div class="card-url">yumi-choi.statichost.page</div>
+  </a>
+
+  <a class="card clickable" href="https://norresnedefysioterapi.statichost.page" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">🏥</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">Kunden-Website · Dänisch</div>
+    <div class="card-name">Nørre Snede Fysioterapi</div>
+    <div class="card-desc">Physiotherapie-Praxis in Dänemark. Dänischsprachige Multi-Page-Site mit Team, Behandlungen, Preisen und perfectCMS. Recraft-generiertes SVG-Logo. Nordische Farbpalette.</div>
+    <div class="card-url">norresnedefysioterapi.statichost.page</div>
+  </a>
+
+</div>
+
+<!-- INFRASTRUKTUR -->
+<div class="section-label">Infrastruktur — das eigentliche Produkt</div>
+<div class="grid">
+
+  <a class="card clickable" href="https://jochen-test.statichost.page/admin/" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">✏️</span>
+      <span class="badge badge-live">Live Demo</span>
+    </div>
+    <div class="card-type">CMS · Eigenbau</div>
+    <div class="card-name">perfectCMS</div>
+    <div class="card-desc">Mein eigenes CMS — inspiriert von WordPerfect. Kunde öffnet /admin, loggt sich per E-Mail ein, schreibt Markdown, klickt "Veröffentlichen". Kein GitHub, kein Drittanbieter. Läuft auf jedem Hoster.</div>
+    <div class="card-url">Demo öffnen → jochen-test.statichost.page/admin/</div>
+  </a>
+
+  <div class="card">
+    <div class="card-top">
+      <span class="card-icon">🏗️</span>
+      <span class="badge badge-live">Fertig</span>
+    </div>
+    <div class="card-type">Framework · Agentur-Basis</div>
+    <div class="card-name">Klarsite</div>
+    <div class="card-desc">Das Template-System hinter jeder Kunden-Website. Eleventy + Nunjucks + perfectCMS. 9-Schritt-Workflow: Briefing bis Launch in 1–2 Wochen. EU-Hosting, 0€ laufende Kosten, DSGVO-konform.</div>
+  </div>
+
+</div>
+
+<!-- SPIELE -->
+<div class="section-label">Spiele</div>
+<div class="grid">
+
+  <a class="card clickable" href="https://j-thrust.app" target="_blank">
+    <div class="card-top">
+      <span class="card-icon">🚀</span>
+      <span class="badge badge-live">Live</span>
+    </div>
+    <div class="card-type">Browser-Game · Retro</div>
+    <div class="card-name">J-THRUST</div>
+    <div class="card-desc">Retro-Gravitationsspiel, inspiriert vom C64-Klassiker "Thrust". Single-File HTML, 9 Level, Pixel-Art-Stil. Der Name, der zur Marke wurde — Schwerkraft, Weite, Struktur. Easter Egg auf der Agentur-Website.</div>
+    <div class="card-url">j-thrust.app</div>
+  </a>
+
+  <div class="card">
+    <div class="card-top">
+      <span class="card-icon">🎮</span>
+      <span class="badge badge-lokal">Lokal</span>
+    </div>
+    <div class="card-type">Browser-Game · 3D</div>
+    <div class="card-name">ZPMA</div>
+    <div class="card-desc">3D Quake-Style Movement-Shooter im Browser. Three.js, echte Quake-Physik (CPMA), cpm3a-Map aus Q3-BSP-Daten konvertiert, 4 Waffen, Bot-KI. Single-File HTML, 81KB Map-Binary.</div>
+  </div>
+
+</div>
+
+<!-- IN ENTWICKLUNG -->
+<div class="section-label">In Entwicklung</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-top">
+      <span class="card-icon">🌵</span>
+      <span class="badge badge-wip">Konzept</span>
+    </div>
+    <div class="card-type">App · Mental Health</div>
+    <div class="card-name">Kaktus</div>
+    <div class="card-desc">Mental-Health-App für Menschen ohne Coaching-Zugang. Niedrigschwellig, ehrlich, ohne Optimierungs-Versprechen.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <span class="card-icon">🤖</span>
+      <span class="badge badge-wip">Konzept</span>
+    </div>
+    <div class="card-type">KI-Tool · Coaching</div>
+    <div class="card-name">AICO</div>
+    <div class="card-desc">Konfrontative KI gegen kognitive Verzerrungen. Kein "Du schaffst das!" — sondern ehrliche Auseinandersetzung mit blinden Flecken.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <span class="card-icon">📱</span>
+      <span class="badge badge-wip">In Arbeit</span>
+    </div>
+    <div class="card-type">iOS App · SceneKit + Metal</div>
+    <div class="card-name">M-Sphere Native</div>
+    <div class="card-desc">Die J-Sphere als native iOS-App. SceneKit, Metal-Partikel, 60 FPS. Läuft auf iPhone, iPad, Mac — und Vision Pro. TestFlight geplant.</div>
+  </div>
+
+</div>
+
+<footer>
+  <div>
+    <div class="footer-brand">J-THRUST</div>
+    <div style="margin-top:4px">Jochen Hornung · Berlin · März 2026</div>
+  </div>
+  <div style="text-align:right;line-height:1.8">
+    joho21@web.de<br>
+    jochenhornung.de
+  </div>
+</footer>
+
+</body>
+</html>

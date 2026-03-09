@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klarsite — J-THRUST Presentation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #D4A017;
+    --gold-dim: rgba(212,160,23,0.15);
+    --gold-border: rgba(212,160,23,0.3);
+    --aubergine: #4D1743;
+    --aub-light: #7a2d6e;
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #222;
+    --text: #d8d8d8;
+    --muted: #666;
+    --white: #f0f0f0;
+    --green: #4ade80;
+    --green-dim: rgba(74,222,128,0.1);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
+    overflow: hidden;
+  }
+
+  .slides { width: 100%; height: 100%; position: relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 72px 96px;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+  .slide.out { opacity: 0; transform: translateX(-40px); transition: opacity 0.3s ease, transform 0.3s ease; }
+
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--border); z-index: 100; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold), #f0c040); transition: width 0.4s ease; }
+  .counter { position: fixed; bottom: 28px; right: 36px; font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.1em; z-index: 100; }
+  .nav-hint { position: fixed; bottom: 28px; left: 36px; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; z-index: 100; }
+  .slide-line { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), transparent 60%); }
+
+  .label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+
+  h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; line-height: 1.05; color: var(--white); margin-bottom: 20px; }
+  h1 .accent { color: var(--gold); }
+  h2 { font-size: clamp(26px, 3.5vw, 44px); font-weight: 700; line-height: 1.1; color: var(--white); margin-bottom: 16px; }
+  h2 .accent { color: var(--gold); }
+  .subtitle { font-size: clamp(14px, 1.8vw, 20px); color: var(--muted); font-weight: 400; line-height: 1.5; max-width: 680px; }
+
+  .cols { display: grid; gap: 32px; width: 100%; }
+  .cols-2 { grid-template-columns: 1fr 1fr; }
+  .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px 26px; }
+  .card.gold-border { border-color: var(--gold-border); }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+  .card-body { font-size: 14px; color: var(--text); line-height: 1.7; }
+  .card-body li { list-style: none; padding: 4px 0 4px 18px; position: relative; font-size: 13.5px; }
+  .card-body li::before { content: '–'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+  .card-body strong { color: var(--white); font-weight: 600; }
+
+  .big-number { font-size: clamp(48px, 8vw, 96px); font-weight: 800; line-height: 1; color: var(--gold); letter-spacing: -2px; }
+  .big-number .small { font-size: 0.35em; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+
+  .flow { display: flex; gap: 0; align-items: stretch; width: 100%; flex-wrap: wrap; }
+  .flow-step { flex: 1; min-width: 0; background: var(--surface2); border: 1px solid var(--border); padding: 18px 16px; position: relative; display: flex; flex-direction: column; gap: 6px; }
+  .flow-step:first-child { border-radius: 10px 0 0 10px; }
+  .flow-step:last-child { border-radius: 0 10px 10px 0; }
+  .flow-step::after { content: '›'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--gold); z-index: 2; background: var(--bg); width: 20px; text-align: center; line-height: 1; }
+  .flow-step:last-child::after { display: none; }
+  .flow-num { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
+  .flow-title { font-size: 12px; font-weight: 700; color: var(--white); line-height: 1.2; }
+
+  .quote { background: var(--gold-dim); border-left: 3px solid var(--gold); border-radius: 0 10px 10px 0; padding: 18px 24px; font-size: 15px; color: var(--white); font-style: italic; line-height: 1.65; max-width: 800px; margin: 16px 0; }
+
+  .pills { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .pill { display: inline-flex; align-items: center; gap: 7px; background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; padding: 7px 16px; font-size: 12.5px; font-weight: 500; color: var(--text); }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+  .pill .dot.gold { background: var(--gold); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { border-bottom: 1px solid var(--gold-border); }
+  thead th { padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody td { padding: 9px 14px; color: var(--text); vertical-align: middle; }
+  tbody td strong { color: var(--white); }
+  tbody tr:last-child { border-bottom: none; }
+  .zero { color: var(--green); font-weight: 700; }
+
+  .split { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; width: 100%; align-items: center; }
+  .stack { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
+  .hl-row { display: flex; align-items: center; gap: 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; font-size: 13.5px; }
+  .hl-row .icon { font-size: 22px; flex-shrink: 0; }
+  .hl-row .content { flex: 1; }
+  .hl-row .content strong { color: var(--white); font-weight: 600; display: block; font-size: 13px; }
+  .hl-row .content span { color: var(--muted); font-size: 12px; }
+  .hl-row .price { font-size: 13px; font-weight: 700; color: var(--green); white-space: nowrap; }
+
+  .cover-brand { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+  .cover-brand::before { content: ''; width: 32px; height: 2px; background: var(--gold); }
+  .tagline { font-size: clamp(13px, 1.5vw, 17px); color: var(--muted); margin-top: 12px; line-height: 1.6; max-width: 600px; }
+
+  .person-box { background: linear-gradient(135deg, var(--surface2), var(--surface)); border: 1px solid var(--border); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .person-name { font-size: 18px; font-weight: 700; color: var(--white); }
+  .person-sub { font-size: 13px; color: var(--gold); }
+
+  .bg-glow { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(120px); opacity: 0.06; }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-bar" id="pbar"></div></div>
+<div class="counter" id="counter">1 / 9</div>
+<div class="nav-hint">Arrow keys &middot; Space &middot; Click</div>
+
+<div class="slides" id="slides">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide active" id="s1">
+    <div class="slide-line"></div>
+    <div class="bg-glow" style="width:600px;height:600px;background:var(--gold);right:-100px;top:-100px;"></div>
+    <div class="bg-glow" style="width:400px;height:400px;background:#4D1743;left:-50px;bottom:0;"></div>
+
+    <div class="cover-brand">J-THRUST</div>
+
+    <h1>
+      Websites that<br>
+      <span class="accent">actually</span><br>
+      work.
+    </h1>
+
+    <p class="tagline">
+      Klarsite — the website framework by J-THRUST.<br>
+      Professional. EU-hosted. Live in two weeks.
+    </p>
+
+    <div class="pills" style="margin-top:40px">
+      <span class="pill"><span class="dot"></span> 100% EU Hosting</span>
+      <span class="pill"><span class="dot"></span> No Cookie Banner</span>
+      <span class="pill"><span class="dot"></span> Zero Running Costs</span>
+      <span class="pill"><span class="dot gold"></span> Custom CMS Included</span>
+      <span class="pill"><span class="dot gold"></span> No Vendor Lock-in</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE PROBLEM -->
+  <div class="slide" id="s2">
+    <div class="slide-line"></div>
+    <div class="label">The Problem</div>
+    <h2>Web agencies are<br><span class="accent">too expensive, too slow,<br>too complicated.</span></h2>
+
+    <div class="cols cols-3" style="margin-top:36px;max-width:900px">
+      <div class="card">
+        <div class="card-title">Time</div>
+        <div class="card-body">
+          <div class="big-number">3 <span class="small">Mo</span></div>
+          <p style="margin-top:8px;font-size:13px;color:var(--muted)">Typical agency timeline for a finished website</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Price</div>
+        <div class="card-body">
+          <div class="big-number">5k+<span class="small"> &euro;</span></div>
+          <p style="margin-top:8px;font-size:13px;color:var(--muted)">Average cost for a professional website</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Dependency</div>
+        <div class="card-body">
+          <div class="big-number" style="font-size:48px;letter-spacing:-1px;">&infin;</div>
+          <p style="margin-top:8px;font-size:13px;color:var(--muted)">WordPress subscriptions, plugin updates, agency lock-in</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:28px">
+      Therapists, coaches, osteopaths — people with a real message — can't afford this. And when they can, they often get mediocrity.
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE SOLUTION -->
+  <div class="slide" id="s3">
+    <div class="slide-line"></div>
+    <div class="label">The Solution</div>
+
+    <div class="split">
+      <div>
+        <h2>Klarsite —<br><span class="accent">Website Framework</span><br>for Purpose-Driven Businesses</h2>
+        <p class="subtitle" style="margin-top:16px">
+          A thoughtful system of templates, tools, and processes. Built once — deployed for each client in 1–2 weeks.
+        </p>
+
+        <div class="stack" style="margin-top:28px">
+          <div class="hl-row">
+            <span class="icon">&#9889;</span>
+            <div class="content">
+              <strong>2 Weeks Instead of 3 Months</strong>
+              <span>Standardized 9-step workflow</span>
+            </div>
+          </div>
+          <div class="hl-row">
+            <span class="icon">&#127466;&#127482;</span>
+            <div class="content">
+              <strong>100% EU Hosting</strong>
+              <span>Servers: Sweden + France, no US clouds</span>
+            </div>
+          </div>
+          <div class="hl-row">
+            <span class="icon">&#9997;&#65039;</span>
+            <div class="content">
+              <strong>Custom CMS Included</strong>
+              <span>Client writes, clicks "Publish" — done</span>
+            </div>
+          </div>
+          <div class="hl-row">
+            <span class="icon">&#128274;</span>
+            <div class="content">
+              <strong>No Lock-in</strong>
+              <span>No WordPress, no Wix, no Squarespace</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card gold-border">
+          <div class="card-title">The Name</div>
+          <div class="card-body">
+            <p style="font-size:32px;font-weight:800;color:var(--white);letter-spacing:-1px;line-height:1">Klarsite</p>
+            <p style="margin-top:12px;line-height:1.6;color:var(--muted);font-size:13px">
+              Nordic/Danish.<br>
+              "Klar" = ready, clean, clear.<br>
+              No agency speak. No bullshit.
+            </p>
+            <p style="margin-top:16px;font-size:13px;color:var(--text)">
+              A sub-brand of <strong>J-THRUST</strong> — Web Design &amp; Digital Tools.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: THE WORKFLOW -->
+  <div class="slide" id="s4">
+    <div class="slide-line"></div>
+    <div class="label">The Process</div>
+    <h2>9 Steps. <span class="accent">2 Weeks.</span> Live.</h2>
+
+    <div class="flow" style="margin-top:32px">
+      <div class="flow-step"><span class="flow-num">01</span><span class="flow-title">Briefing</span></div>
+      <div class="flow-step"><span class="flow-num">02</span><span class="flow-title">Color Palette</span></div>
+      <div class="flow-step"><span class="flow-num">03</span><span class="flow-title">Setup &amp; Git</span></div>
+      <div class="flow-step"><span class="flow-num">04</span><span class="flow-title">Branding &amp; Logo</span></div>
+      <div class="flow-step"><span class="flow-num">05</span><span class="flow-title">Legal &amp; Privacy</span></div>
+      <div class="flow-step"><span class="flow-num">06</span><span class="flow-title">Content</span></div>
+      <div class="flow-step"><span class="flow-num">07</span><span class="flow-title">SEO</span></div>
+      <div class="flow-step"><span class="flow-num">08</span><span class="flow-title">Domain</span></div>
+      <div class="flow-step" style="background:var(--gold-dim);border-color:var(--gold-border)"><span class="flow-num">09</span><span class="flow-title" style="color:var(--gold)">&#128640; Launch</span></div>
+    </div>
+
+    <div class="cols cols-2" style="margin-top:28px;max-width:900px">
+      <div class="card">
+        <div class="card-title">What the Client Provides</div>
+        <div class="card-body">
+          <ul>
+            <li>Brief (30 min. conversation)</li>
+            <li>A reference image for the color palette</li>
+            <li>Photos (or Instagram account)</li>
+            <li>Text / information about themselves</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">What I Deliver</div>
+        <div class="card-body">
+          <ul>
+            <li>Finished, mobile-optimized website</li>
+            <li>Logo (SVG, scalable)</li>
+            <li>CMS access (edit text yourself)</li>
+            <li>Legal pages (GDPR compliant)</li>
+            <li>Domain setup &amp; launch</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: TECH STACK -->
+  <div class="slide" id="s5">
+    <div class="slide-line"></div>
+    <div class="label">Under the Hood</div>
+    <h2>Modern tech, <span class="accent">invisible</span><br>to the client.</h2>
+
+    <div class="cols cols-3" style="margin-top:32px;max-width:960px">
+      <div class="card">
+        <div class="card-title">Website</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Eleventy</strong> — Static Site Generator</li>
+            <li><strong>Nunjucks</strong> — Templates</li>
+            <li><strong>Plain CSS</strong> — no framework bloat</li>
+            <li>Loads in &lt; 1 second</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hosting — statichost.eu</div>
+        <div class="card-body">
+          <ul>
+            <li>Server: Helsinki, Finland &#127467;&#127470;</li>
+            <li>No logs, no IPs, GDPR &#10003;</li>
+            <li>Auto-deploy on every change</li>
+            <li>Build time: ~18 seconds</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">CMS — perfectCMS</div>
+        <div class="card-body">
+          <ul>
+            <li>Server: Paris, France &#127467;&#127479;</li>
+            <li>Email login (no password needed)</li>
+            <li>Markdown editor, live preview</li>
+            <li>Version history, multi-user</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:24px">
+      The client sees: a website. The client needs: just an email address. Klarsite handles the rest — built once, deployed again and again.
+    </div>
+  </div>
+
+  <!-- SLIDE 6: COSTS -->
+  <div class="slide" id="s6">
+    <div class="slide-line"></div>
+    <div class="label">Client Costs</div>
+    <h2>What does it cost<br>to <span class="accent">keep it running?</span></h2>
+
+    <div style="margin-top:32px;max-width:800px;width:100%">
+      <table>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Visitors/Month</th>
+            <th>Cost/Month</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Static site, occasionally updated</td>
+            <td>up to 2,000</td>
+            <td class="zero">&euro;0</td>
+          </tr>
+          <tr>
+            <td>Blog, 2–3 posts per month</td>
+            <td>up to 3,000</td>
+            <td class="zero">&euro;0</td>
+          </tr>
+          <tr>
+            <td>Site goes viral</td>
+            <td>~10,000</td>
+            <td><strong>~&euro;0.50</strong></td>
+          </tr>
+          <tr>
+            <td>Heavy traffic</td>
+            <td>~50,000</td>
+            <td><strong>~&euro;4</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="hl-row" style="margin-top:20px">
+        <span class="icon">&#127760;</span>
+        <div class="content">
+          <strong>Domain — the only recurring expense</strong>
+          <span>&euro;10–15 per year. Via Namecheap or Cloudflare. Paid by the client.</span>
+        </div>
+        <span class="price">~&euro;1/mo</span>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:24px">
+      "Your website costs you nothing to run — just the domain, that's 10–15 euros a year. Only at tens of thousands of visitors per month do a few euros kick in. No subscription trap, no fine print."
+    </div>
+  </div>
+
+  <!-- SLIDE 7: TARGET AUDIENCE -->
+  <div class="slide" id="s7">
+    <div class="slide-line"></div>
+    <div class="label">Target Audience</div>
+    <h2>People with a <span class="accent">message</span>,<br>without a budget for big agencies.</h2>
+
+    <div class="cols cols-2" style="margin-top:32px;max-width:860px">
+      <div class="stack">
+        <div class="hl-row">
+          <span class="icon">&#129496;</span>
+          <div class="content">
+            <strong>Therapists &amp; Coaches</strong>
+            <span>Psychotherapy, bodywork, systemic counseling</span>
+          </div>
+        </div>
+        <div class="hl-row">
+          <span class="icon">&#128134;</span>
+          <div class="content">
+            <strong>Healers &amp; Osteopaths</strong>
+            <span>Naturopathy, osteopathy, nutrition counseling</span>
+          </div>
+        </div>
+        <div class="hl-row">
+          <span class="icon">&#127912;</span>
+          <div class="content">
+            <strong>Creatives &amp; Artists</strong>
+            <span>Photographers, musicians, designers, authors</span>
+          </div>
+        </div>
+        <div class="hl-row">
+          <span class="icon">&#127793;</span>
+          <div class="content">
+            <strong>NGOs &amp; Small Organizations</strong>
+            <span>Non-profit projects with a mission</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card gold-border">
+          <div class="card-title">The Touchstone Filter</div>
+          <div class="card-body">
+            <p style="font-size:13.5px;line-height:1.7;color:var(--text)">
+              I only work with clients who <strong>create, not extract</strong>. This isn't a marketing claim — it's a technical tool: the Touchstone.
+            </p>
+            <p style="margin-top:12px;font-size:13px;color:var(--muted)">
+              &rarr; Supports real work, real value, real relationships with people.
+            </p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="card-title">First Client</div>
+          <div class="card-body">
+            <p style="font-size:13.5px;line-height:1.7">
+              <strong>Sandra</strong> — Osteopath, Berlin.<br>
+              Initial conversation done, inquiry in progress.<br>
+              <span style="color:var(--muted)">Contact through personal referral.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: BUSINESS MODEL -->
+  <div class="slide" id="s8">
+    <div class="slide-line"></div>
+    <div class="label">Business Model</div>
+    <h2>How I <span class="accent">make money</span>.</h2>
+
+    <div class="cols cols-2" style="margin-top:32px;max-width:900px">
+      <div class="stack">
+        <div class="hl-row">
+          <span class="icon">&#128187;</span>
+          <div class="content">
+            <strong>Website Creation (one-time)</strong>
+            <span>Complete package: design, content, CMS, launch</span>
+          </div>
+          <span class="price">&euro;1,500–3,500</span>
+        </div>
+        <div class="hl-row">
+          <span class="icon">&#128295;</span>
+          <div class="content">
+            <strong>Changes &amp; Extensions (hourly)</strong>
+            <span>Design changes, new pages, structural adjustments — only when work arises</span>
+          </div>
+          <span class="price">Hourly rate</span>
+        </div>
+        <div class="hl-row" style="border-color:var(--gold-border)">
+          <span class="icon">&#128200;</span>
+          <div class="content">
+            <strong>New Features &amp; Expansions</strong>
+            <span>Multilingual, new pages, special projects</span>
+          </div>
+          <span class="price">Hourly rate</span>
+        </div>
+      </div>
+
+      <div class="card gold-border">
+        <div class="card-title">Financial Plan</div>
+        <div class="card-body">
+          <table style="font-size:12.5px">
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Target</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Apr–Jun 2026</td>
+                <td><strong>&euro;0–1,500/mo</strong></td>
+              </tr>
+              <tr>
+                <td>Jul–Dec 2026</td>
+                <td><strong>&euro;1,500–3,000/mo</strong></td>
+              </tr>
+              <tr>
+                <td>2027</td>
+                <td><strong>&euro;3,000–5,000/mo</strong></td>
+              </tr>
+              <tr>
+                <td>Long-term</td>
+                <td><strong style="color:var(--gold)">&euro;7,010/mo</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top:12px;font-size:12px;color:var(--muted)">
+            1–2 websites/month are enough for the build-up phase.<br>
+            Base: social benefits + startup grant as buffer.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pills" style="margin-top:24px">
+      <span class="pill"><span class="dot gold"></span> Startup costs: near zero</span>
+      <span class="pill"><span class="dot gold"></span> Infrastructure already built</span>
+      <span class="pill"><span class="dot gold"></span> First client: Sandra (in talks)</span>
+      <span class="pill"><span class="dot"></span> Berlin Startup Grant: up to &euro;50,000</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: WHY ME -->
+  <div class="slide" id="s9">
+    <div class="slide-line"></div>
+    <div class="label">Why J-THRUST</div>
+
+    <div class="split">
+      <div>
+        <h2>50 Days.<br><span class="accent">&euro;80,000–170,000</span><br>Agency Value.</h2>
+        <p class="subtitle" style="margin-top:16px">
+          Built alone. No team, no capital, no investor.
+          Jan–Feb 2026: 3 websites, 2 web apps, 2 browser games.
+        </p>
+
+        <div class="stack" style="margin-top:24px">
+          <div class="hl-row">
+            <span class="icon">&#127919;</span>
+            <div class="content">
+              <strong>Speed as a Differentiator</strong>
+              <span>2 weeks instead of 3 months — through proprietary infrastructure</span>
+            </div>
+          </div>
+          <div class="hl-row">
+            <span class="icon">&#129504;</span>
+            <div class="content">
+              <strong>Coach &amp; Developer in One</strong>
+              <span>I understand the audience — because I am the audience</span>
+            </div>
+          </div>
+          <div class="hl-row">
+            <span class="icon">&#128295;</span>
+            <div class="content">
+              <strong>Everything Self-Built</strong>
+              <span>perfectCMS, Klarsite, Touchstone — no third-party systems</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="person-box">
+          <div class="person-name">Jochen Hornung</div>
+          <div class="person-sub">Developer &middot; Coach &middot; Founder</div>
+          <div class="card-body" style="margin-top:8px">
+            <ul>
+              <li>43, Berlin-Mitte</li>
+              <li>Political Scientist (M.A. Heidelberg)</li>
+              <li>Coach for Neurosystemic Integration</li>
+              <li>Philosophy: Rawls, Metzinger, Buddhism</li>
+            </ul>
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted);line-height:1.6">
+            "I live what I build. The target audience is me — or was me. That makes the difference."
+          </div>
+        </div>
+
+        <div style="margin-top:14px;text-align:center">
+          <div style="font-size:32px;font-weight:800;color:var(--gold);letter-spacing:-1px">J-THRUST</div>
+          <div style="font-size:11px;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-top:4px">Gravity &middot; Reach &middot; Structure</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const pbar = document.getElementById('pbar');
+  const counter = document.getElementById('counter');
+  const total = slides.length;
+  let current = 0;
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('out');
+    setTimeout(() => slides[current - (current > n ? -1 : 0)].classList.remove('out'), 400);
+    const prev = current;
+    current = n;
+    setTimeout(() => { slides[prev].classList.remove('out'); slides[current].classList.add('active'); }, 50);
+    pbar.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goTo(current - 1); }
+  });
+
+  document.addEventListener('click', e => { if (e.target.closest('a')) return; goTo(current + 1); });
+  pbar.style.width = (1 / total * 100) + '%';
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (dx < -50) goTo(current + 1);
+    if (dx > 50) goTo(current - 1);
+  });
+</script>
+</body>
+</html>

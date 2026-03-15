@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Guardrails — Miriam & Mathis</title>
+<style>
+  /* ===== THEME SYSTEM ===== */
+  :root {
+    --transition: 0.3s ease;
+  }
+
+  [data-theme="light"] {
+    --color-bg: #f5f0e8;
+    --color-primary: #ffffff;
+    --color-secondary: #8a8278;
+    --color-accent: #2563eb;
+    --color-teal: #0d7377;
+    --color-warm: #D4A017;
+    --color-light: #1a1a1a;
+    --color-border: #e0dbd3;
+    --color-muted: #6b6560;
+    --color-card-hover: #faf8f4;
+    --color-hero-overlay: rgba(245,240,232,0.85);
+    --color-shadow: rgba(0,0,0,0.06);
+    --color-tag-bg: rgba(37,99,235,0.08);
+    --color-tag-border: rgba(37,99,235,0.15);
+    --photo-filter: none;
+  }
+
+  [data-theme="dark"] {
+    --color-bg: #0a0a0a;
+    --color-primary: #141414;
+    --color-secondary: #8a8278;
+    --color-accent: #4a90d9;
+    --color-teal: #5ba4a4;
+    --color-warm: #D4A017;
+    --color-light: #e8e0d4;
+    --color-border: #2a2a2a;
+    --color-muted: #6b6560;
+    --color-card-hover: #1a1a1a;
+    --color-hero-overlay: rgba(10,10,10,0.75);
+    --color-shadow: rgba(0,0,0,0.3);
+    --color-tag-bg: rgba(74,144,217,0.1);
+    --color-tag-border: rgba(74,144,217,0.2);
+    --photo-filter: brightness(0.95);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    background: var(--color-bg);
+    color: var(--color-light);
+    line-height: 1.6;
+    font-size: 16px;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  /* ===== THEME TOGGLE ===== */
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all var(--transition);
+    box-shadow: 0 2px 8px var(--color-shadow);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-warm);
+    transform: scale(1.05);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    padding: 120px 24px 80px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .hero-name {
+    font-size: 2.8rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--color-light);
+    margin-bottom: 12px;
+  }
+
+  .hero-tagline {
+    font-size: 1.05rem;
+    color: var(--color-secondary);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+
+  .hero-founders-row {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  .hero-founder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    border: 3px solid var(--color-border);
+    filter: var(--photo-filter);
+    transition: all var(--transition);
+  }
+
+  .hero-photo:hover {
+    border-color: var(--color-warm);
+    transform: scale(1.03);
+  }
+
+  .hero-founder-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-light);
+  }
+
+  .hero-founder-role {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    margin-top: -8px;
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ===== SECTIONS ===== */
+  section {
+    margin-bottom: 56px;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-light);
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    transition: all var(--transition);
+  }
+
+  .card:hover {
+    border-color: var(--color-warm);
+    box-shadow: 0 2px 12px var(--color-shadow);
+  }
+
+  .card-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-muted);
+    margin-bottom: 4px;
+  }
+
+  .card-value {
+    font-size: 0.92rem;
+    color: var(--color-light);
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--color-teal);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  a:hover { border-color: var(--color-teal); }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  /* ===== QUOTE ===== */
+  blockquote {
+    padding: 20px 24px;
+    background: var(--color-primary);
+    border-left: 3px solid var(--color-warm);
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 20px;
+    font-style: italic;
+    color: var(--color-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  /* ===== FOUNDER PROFILE ===== */
+  .founder {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .founder-photo {
+    width: 160px;
+    min-width: 160px;
+    height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+    object-position: center 20%;
+    border: 1px solid var(--color-border);
+    filter: var(--photo-filter);
+  }
+
+  .founder-info { flex: 1; }
+
+  .founder-name {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--color-light);
+    margin-bottom: 2px;
+  }
+
+  .founder-role {
+    font-size: 0.82rem;
+    color: var(--color-muted);
+    margin-bottom: 12px;
+  }
+
+  .founder-bio {
+    font-size: 0.9rem;
+    color: var(--color-light);
+    line-height: 1.7;
+  }
+
+  /* ===== TAGS ===== */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--color-tag-bg);
+    border: 1px solid var(--color-tag-border);
+    color: var(--color-accent);
+    letter-spacing: 0.02em;
+  }
+
+  .tag.warm {
+    background: rgba(212,160,23,0.08);
+    border-color: rgba(212,160,23,0.18);
+    color: var(--color-warm);
+  }
+
+  .tag.teal {
+    background: rgba(13,115,119,0.08);
+    border-color: rgba(13,115,119,0.18);
+    color: var(--color-teal);
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    bottom: 6px;
+    width: 1.5px;
+    background: var(--color-border);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 20px;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border);
+  }
+
+  .tl-item.hl::before {
+    background: var(--color-warm);
+    box-shadow: 0 0 6px rgba(212,160,23,0.3);
+  }
+
+  .tl-year {
+    font-size: 0.78rem;
+    color: var(--color-warm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .tl-text {
+    font-size: 0.9rem;
+    color: var(--color-light);
+    margin-top: 1px;
+  }
+
+  .tl-detail {
+    font-size: 0.82rem;
+    color: var(--color-muted);
+    margin-top: 2px;
+  }
+
+  /* ===== HALLU GRID ===== */
+  .hallu-item {
+    text-align: center;
+    padding: 14px 8px;
+    background: var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    transition: border-color 0.2s;
+  }
+
+  .hallu-item:hover { border-color: var(--color-accent); }
+
+  .hallu-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-light);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .hallu-desc {
+    font-size: 0.65rem;
+    color: var(--color-muted);
+    line-height: 1.4;
+  }
+
+  /* ===== STATS ===== */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat {
+    text-align: center;
+    padding: 20px 8px;
+    background: var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+  }
+
+  .stat-num {
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--color-warm);
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  /* ===== SIDES (Licht & Schatten) ===== */
+  .sides {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .side {
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-primary);
+  }
+
+  .side-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .side.licht .side-title { color: var(--color-warm); }
+  .side.schatten .side-title { color: var(--color-muted); }
+
+  .side ul { list-style: none; padding: 0; }
+
+  .side li {
+    font-size: 0.85rem;
+    color: var(--color-light);
+    margin-bottom: 6px;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .side li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+
+  .side.licht li::before { background: var(--color-warm); }
+  .side.schatten li::before { background: var(--color-muted); }
+
+  /* ===== CONNECTION ===== */
+  .connection {
+    background: var(--color-primary);
+    border: 1px solid var(--color-warm);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .connection p {
+    font-size: 0.92rem;
+    color: var(--color-light);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+
+  .connection p:last-child { margin-bottom: 0; }
+
+  /* ===== ASSESSMENT ===== */
+  .assessment {
+    background: var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  .assessment p {
+    font-size: 0.92rem;
+    color: var(--color-light);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .assessment p:last-child { margin-bottom: 0; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--color-muted);
+    font-size: 0.72rem;
+    border-top: 1px solid var(--color-border);
+    letter-spacing: 0.03em;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .hero-name { font-size: 2rem; }
+    .hero { padding: 80px 20px 60px; }
+    .hero-founders-row { gap: 32px; }
+    .grid-2, .sides { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .founder { flex-direction: column; }
+    .founder-photo { width: 100%; min-width: unset; height: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Hell/Dunkel umschalten">
+  <span id="theme-icon">🌙</span>
+</button>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-label">Profil — Recherche für Jochen</div>
+  <h1 class="hero-name">Blue Guardrails</h1>
+  <p class="hero-tagline">Halluzinationen erkennen, bevor sie Schaden anrichten — auf Claim-Ebene, nicht auf Response-Ebene.</p>
+  <div class="hero-founders-row">
+    <div class="hero-founder">
+      <img class="hero-photo" src="https://www.blueguardrails.com/photos/miriam_portrait.jpg" alt="Miriam Kümmel">
+      <span class="hero-founder-name">Miriam Kümmel</span>
+      <span class="hero-founder-role">Co-Founder</span>
+    </div>
+    <div class="hero-founder">
+      <img class="hero-photo" src="https://www.blueguardrails.com/photos/mathis_portrait.jpg" alt="Mathis Lucka">
+      <span class="hero-founder-name">Mathis Lucka</span>
+      <span class="hero-founder-role">Co-Founder</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- I. STECKBRIEF -->
+  <section>
+    <div class="section-label">I</div>
+    <h2>Steckbrief</h2>
+    <div class="grid-2" style="margin-bottom: 12px;">
+      <div class="card">
+        <div class="card-label">Firma</div>
+        <div class="card-value">Blue Guardrails GmbH</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Gründung</div>
+        <div class="card-value">Oktober 2025</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Handelsregister</div>
+        <div class="card-value">HRB 280969 B, AG Berlin (Charlottenburg)</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Adresse</div>
+        <div class="card-value">Mainzer Str. 9, 12053 Berlin (Neukölln)</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label">Website</div>
+        <div class="card-value"><a href="https://www.blueguardrails.com" target="_blank">blueguardrails.com</a></div>
+      </div>
+      <div class="card">
+        <div class="card-label">E-Mail</div>
+        <div class="card-value"><a href="mailto:info@blueguardrails.com">info@blueguardrails.com</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- II. DAS PROBLEM -->
+  <section>
+    <div class="section-label">II</div>
+    <h2>Was sie lösen</h2>
+    <blockquote>LLMs halluzinieren. Das ist kein Bug — es ist eine Eigenschaft des Systems. Die Frage ist nicht ob, sondern wie man damit umgeht.</blockquote>
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="card-value">
+        Blue Guardrails zerlegt jede LLM-Antwort in einzelne Claims und prüft jeden Claim gegen den Quellkontext.
+        Das ermöglicht präzise Halluzinationserkennung in 8 Kategorien — von Fabrication über Reasoning Error
+        bis Terminological Imprecision. EU-Datenresidenz, custom pro Kundendomäne.
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="hallu-item">
+        <div class="hallu-name">Fabrication</div>
+        <div class="hallu-desc">Frei erfunden, kein Quellbezug</div>
+      </div>
+      <div class="hallu-item">
+        <div class="hallu-name">Context Misattribution</div>
+        <div class="hallu-desc">Richtige Info, falsche Quelle</div>
+      </div>
+      <div class="hallu-item">
+        <div class="hallu-name">Reasoning Error</div>
+        <div class="hallu-desc">Logikfehler</div>
+      </div>
+      <div class="hallu-item">
+        <div class="hallu-name">Incorrect Refusal</div>
+        <div class="hallu-desc">Antwortet nicht obwohl möglich</div>
+      </div>
+      <div class="hallu-item">
+        <div class="hallu-name">Omission</div>
+        <div class="hallu-desc">Relevantes weggelassen</div>
+      </div>
+      <div class="hallu-item">
+        <div class="hallu-name">Terminological Imprecision</div>
+        <div class="hallu-desc">Fachbegriffe ungenau</div>
+      </div>
+      <div class="hallu-item">
+        <div class="hallu-name">World Knowledge</div>
+        <div class="hallu-desc">Trainingsdaten statt Kontext</div>
+      </div>
+      <div class="hallu-item">
+        <div class="hallu-name">Contradiction</div>
+        <div class="hallu-desc">Widersprüche in der Antwort</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- III. MIRIAM -->
+  <section>
+    <div class="section-label">III</div>
+    <h2>Miriam Kümmel</h2>
+    <div class="founder">
+      <img class="founder-photo" src="https://www.blueguardrails.com/photos/miriam_portrait.jpg" alt="Miriam Kümmel — Foto: Olga Blackbird">
+      <div class="founder-info">
+        <div class="founder-name">Miriam Kümmel</div>
+        <div class="founder-role">Co-Founder · 6+ Jahre Production-AI</div>
+        <p class="founder-bio">
+          Linguistin, die zur NLP-Ingenieurin wurde. Studium an der FAU Erlangen (Germanistische Linguistik)
+          und Uni Konstanz / UMass Amherst (Speech &amp; Language Processing).
+          6+ Jahre Erfahrung mit Production-AI in Legal Publishing, Nachrichtenmedien,
+          Financial Services und öffentlicher Verwaltung.
+        </p>
+        <div class="tags">
+          <span class="tag">NLP</span>
+          <span class="tag">Solution Engineering</span>
+          <span class="tag teal">Applied ML</span>
+          <span class="tag warm">Ai4 2024 Speaker</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">Studium</div>
+        <div class="tl-text">FAU Erlangen → Uni Konstanz / UMass Amherst</div>
+        <div class="tl-detail">Germanistische Linguistik + Speech &amp; Language Processing</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">~2018 — Daimler AG</div>
+        <div class="tl-text">Chatbot-Entwicklung (Praktikum)</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">2019 — DEMOS (Alexanderplatz)</div>
+        <div class="tl-text">Data Scientist</div>
+        <div class="tl-detail">Demokratische Partizipation als SaaS. Hier trifft sie Mathis — und Katja.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">~2020 — Xircle</div>
+        <div class="tl-text">Data Scientist</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">~2021–2025 — deepset</div>
+        <div class="tl-text">Applied NLP Engineer → Team Lead Solution Engineering</div>
+        <div class="tl-detail">Haystack-Framework. Enterprise-Kunden in regulierten Branchen.</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">Oktober 2025 — Blue Guardrails</div>
+        <div class="tl-text">Co-Founder</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IV. MATHIS -->
+  <section>
+    <div class="section-label">IV</div>
+    <h2>Mathis Lucka</h2>
+    <div class="founder">
+      <img class="founder-photo" src="https://www.blueguardrails.com/photos/mathis_portrait.jpg" alt="Mathis Lucka — Foto: Olga Blackbird">
+      <div class="founder-info">
+        <div class="founder-name">Mathis Lucka</div>
+        <div class="founder-role">Co-Founder · 7+ Jahre Enterprise-AI</div>
+        <p class="founder-bio">
+          Politikwissenschaftler, der zum KI-Produktstrategen wurde. Studium an der FU Berlin,
+          Sciences Po Lyon und Uni Wien. EU-Kommission, dann DEMOS, dann VP Product bei deepset (Haystack).
+          Kaggle-Sieger, ACL-publiziert. Einer der wenigen, die Produkt UND Technik auf höchstem Niveau können.
+        </p>
+        <div class="tags">
+          <span class="tag">Product Strategy</span>
+          <span class="tag">ML / NLP</span>
+          <span class="tag teal">Open Source</span>
+          <span class="tag warm">Kaggle 1st Place</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">Studium</div>
+        <div class="tl-text">Politikwissenschaft: FU Berlin → Sciences Po Lyon → Uni Wien</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">~2017 — EU-Kommission</div>
+        <div class="tl-text">Traineeship (Brüssel)</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">2018–2022 — DEMOS (Alexanderplatz)</div>
+        <div class="tl-text">Product Owner → Head of Product</div>
+        <div class="tl-detail">Demokratische Partizipation für Kommunen und Regierungen. Hier trifft er Miriam.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2021 — Kaggle</div>
+        <div class="tl-text">1. Platz: CommonLit Readability Prize ($20.000)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2022 — ACL Anthology</div>
+        <div class="tl-text">„Pseudo-Labels Are All You Need" (GermEval 2022)</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">~2022–2025 — deepset</div>
+        <div class="tl-text">Solution Engineering → VP Product</div>
+        <div class="tl-detail">Haystack-Framework. Produktstrategie und Enterprise-Kunden.</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">Oktober 2025 — Blue Guardrails</div>
+        <div class="tl-text">Co-Founder</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- V. BENCHMARKS -->
+  <section>
+    <div class="section-label">V</div>
+    <h2>Benchmarks &amp; Publikationen</h2>
+    <div class="card">
+      <div class="card-label">November 2025 · HuggingFace Dataset</div>
+      <div class="card-value" style="margin-bottom: 4px;"><strong>RAGTruth++</strong></div>
+      <div class="card-value">
+        Erweiterter Halluzinations-Benchmark mit 865 Annotationen auf Claim-Ebene.
+        408 Datenpunkte, 6 Modelle getestet. Offen verfügbar auf HuggingFace.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Februar 2026 · Pharma RAG Benchmark</div>
+      <div class="card-value" style="margin-bottom: 4px;"><strong>PlaceboBench</strong></div>
+      <div class="card-value">
+        69 klinische Fragen, 23 Medikamente, 7 LLMs getestet.
+        Ergebnis: Halluzinationsraten zwischen 26% und 64%.
+        Selbst beim besten Modell halluziniert jede vierte Antwort. 482 Downloads auf HuggingFace.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Konferenzen</div>
+      <div class="tags" style="margin-top: 4px;">
+        <span class="tag warm">Ai4 2024 (Miriam)</span>
+        <span class="tag warm">PyCon DE &amp; PyData 2023 (Mathis)</span>
+        <span class="tag warm">Generative AI Summit Berlin (Mathis)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- VI. GEMEINSAMER WEG -->
+  <section>
+    <div class="section-label">VI</div>
+    <h2>Gemeinsamer Weg</h2>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Gründer</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6–7+</div>
+        <div class="stat-label">Jahre AI</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Kategorien</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">865</div>
+        <div class="stat-label">Annotationen</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item hl">
+        <div class="tl-year">~2018–2019 — DEMOS</div>
+        <div class="tl-text">Erste gemeinsame Arbeit</div>
+        <div class="tl-detail">Demokratische Partizipation, Berlin Alexanderplatz. Mathis als Head of Product, Miriam als Data Scientist.</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">~2021–2025 — deepset</div>
+        <div class="tl-text">Beide in Führungsrollen beim Haystack-Framework</div>
+        <div class="tl-detail">Enterprise-Kunden in Legal, Finance, Public Sector. VP Product + Team Lead Solution Engineering.</div>
+      </div>
+      <div class="tl-item hl">
+        <div class="tl-year">Oktober 2025 — Gründung</div>
+        <div class="tl-text">Blue Guardrails GmbH</div>
+        <div class="tl-detail">LinkedIn-Ankündigung: 162 Likes, 43 Kommentare.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">Nov 2025 – Feb 2026</div>
+        <div class="tl-text">2 Benchmarks in 4 Monaten</div>
+        <div class="tl-detail">RAGTruth++ und PlaceboBench — offen verfügbar.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VII. VERBINDUNG -->
+  <section>
+    <div class="section-label">VII</div>
+    <h2>Verbindung zu Jochen</h2>
+    <div class="connection">
+      <p>
+        <strong>Katja</strong> (Levis Mutter, getrennt lebend) war SCRUM Master bei DEMOS am Alexanderplatz —
+        derselben Firma, bei der Miriam und Mathis sich kennengelernt haben.
+        <strong>Miriam ist Katjas sehr gute Freundin</strong> — nicht nur eine Ex-Kollegin.
+      </p>
+      <p>
+        Das macht die Verbindung persönlich. Jochen kennt den DEMOS-Kontext aus erster Hand,
+        und über Katja gibt es einen direkten Draht zu Miriam und Mathis.
+      </p>
+      <p style="color: var(--color-muted); font-size: 0.85rem; margin-top: 4px;">
+        Mathis hat wie Jochen Politikwissenschaft studiert. Beide kamen über Umwege zur Technologie.
+      </p>
+    </div>
+  </section>
+
+  <!-- VIII. LINKS -->
+  <section>
+    <div class="section-label">VIII</div>
+    <h2>Links &amp; Präsenz</h2>
+    <div class="card">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; justify-content: space-between;"><span>Website</span> <a href="https://www.blueguardrails.com" target="_blank">blueguardrails.com</a></div>
+        <div style="display: flex; justify-content: space-between;"><span>LinkedIn (Company)</span> <a href="https://de.linkedin.com/company/blue-guardrails" target="_blank">blue-guardrails</a></div>
+        <div style="display: flex; justify-content: space-between;"><span>HuggingFace</span> <a href="https://huggingface.co/blue-guardrails" target="_blank">blue-guardrails</a></div>
+        <div style="display: flex; justify-content: space-between;"><span>Miriam — LinkedIn</span> <a href="https://www.linkedin.com/in/miriam-kuemmel/" target="_blank">miriam-kuemmel</a></div>
+        <div style="display: flex; justify-content: space-between;"><span>Mathis — LinkedIn</span> <a href="https://www.linkedin.com/in/mathis-lucka-685037201/" target="_blank">mathis-lucka</a></div>
+        <div style="display: flex; justify-content: space-between;"><span>Mathis — GitHub</span> <a href="https://github.com/mathislucka" target="_blank">mathislucka</a></div>
+        <div style="display: flex; justify-content: space-between;"><span>Mathis — HuggingFace</span> <a href="https://huggingface.co/mathis-lucka" target="_blank">mathis-lucka</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Social Media</div>
+      <div class="card-value" style="color: var(--color-muted);">Kein Twitter/X, YouTube oder Instagram. Fokus auf LinkedIn und HuggingFace — typisch B2B-AI.</div>
+    </div>
+  </section>
+
+  <!-- IX. LICHT & SCHATTEN -->
+  <section>
+    <div class="section-label">IX</div>
+    <h2>Licht &amp; Schatten</h2>
+    <div class="sides">
+      <div class="side licht">
+        <div class="side-title">Stärken</div>
+        <ul>
+          <li>Starke Credentials aus deepset (Haystack)</li>
+          <li>VP Product + Team Lead — Führungserfahrung</li>
+          <li>Domain-spezifisch statt „one size fits all"</li>
+          <li>Open-Source-Beiträge (HuggingFace)</li>
+          <li>EU-Datenresidenz, DSGVO-nativ</li>
+          <li>Claim-Level = technisch überlegen</li>
+          <li>Kaggle 1st + ACL-Publikation</li>
+          <li>2 Benchmarks in 4 Monaten</li>
+        </ul>
+      </div>
+      <div class="side schatten">
+        <div class="side-title">Offene Fragen</div>
+        <ul>
+          <li>Keine bekannte Finanzierung</li>
+          <li>Keine öffentlichen Kunden</li>
+          <li>Sehr kleines Team (2 Personen?)</li>
+          <li>Kein öffentliches Pricing</li>
+          <li>Erst Oktober 2025 gegründet</li>
+          <li>Wettbewerb: Arize, LangSmith</li>
+          <li>Werden LLMs besser im Nicht-Halluzinieren?</li>
+          <li>Revenue-Modell unklar</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- X. EINSCHÄTZUNG -->
+  <section>
+    <div class="section-label">X</div>
+    <h2>Einschätzung</h2>
+    <div class="assessment">
+      <p>
+        Miriam und Mathis bringen die Kombination, die für ein AI-Observability-Startup entscheidend ist:
+        <strong>tiefe NLP-Expertise</strong> (Miriam) und <strong>Produktstrategie auf Enterprise-Niveau</strong> (Mathis).
+        Beide haben jahrelang bei deepset Enterprise-AI in regulierten Branchen ausgeliefert.
+      </p>
+      <p>
+        Der Claim-Level-Ansatz ist der richtige Gedanke. Eine ganze LLM-Antwort als „halluziniert" oder „korrekt"
+        zu bewerten ist wie ein Bluttest der nur „krank" oder „gesund" sagt. Blue Guardrails will die einzelne
+        Behauptung prüfen — Screening vs. Diagnostik.
+      </p>
+      <p>
+        Dass sie aus DEMOS kommen — demokratische Partizipation — zeigt ein Wertegerüst, das über reine
+        Tech-Optimierung hinausgeht. Und die Geschwindigkeit beeindruckt: zwei Benchmarks in vier Monaten.
+      </p>
+      <p style="color: var(--color-muted); font-size: 0.85rem;">
+        Risiko: Kein Funding, keine öffentlichen Kunden, nur zwei Leute. Die nächsten 12 Monate werden zeigen
+        ob das Fundament trägt.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<div class="footer">
+  Recherche: Claude · Zusammengestellt für Jochen · Stand: 15. März 2026<br>
+  Quellen: LinkedIn, HuggingFace, North Data, blueguardrails.com, ACL Anthology, Kaggle<br>
+  Fotos: Olga Blackbird · blueguardrails.com
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const icon = document.getElementById('theme-icon');
+  if (html.getAttribute('data-theme') === 'light') {
+    html.setAttribute('data-theme', 'dark');
+    icon.textContent = '☀️';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    icon.textContent = '🌙';
+  }
+}
+</script>
+
+</body>
+</html>
